@@ -3,25 +3,217 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Footballer Life — Support</title>
+<title>Footballer Life — Football career &amp; life sim</title>
+<meta name="description" content="Play, manage or own the club. Rise from the school pitch to the world stage, take the big moments yourself and build a life off the pitch. Coming to iPhone.">
+<meta property="og:title" content="Footballer Life">
+<meta property="og:description" content="Play, manage or own the club. A football career and life sim for iPhone.">
+<meta property="og:image" content="img/match_centre.jpg">
+<link rel="icon" href="img/icon.png">
+<link rel="apple-touch-icon" href="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 680px; margin: 0 auto; padding: 24px 16px; line-height: 1.55; color: #16202b; background: #fff; }
-  h1 { font-size: 1.7rem; } h2 { font-size: 1.15rem; margin-top: 1.6em; }
-  @media (prefers-color-scheme: dark) { body { color: #e8eef3; background: #0b1118; } a { color: #a6f06a; } }
+  :root {
+    --bg: #070d14; --surface: #0f1a26; --surface-2: #142334; --line: rgba(255,255,255,0.08);
+    --text: #eef4f7; --muted: #8fa1b0; --green: #a6f06a; --gold: #f2c94c;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--green); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  .display { font-family: "Barlow Condensed", Inter, sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 0.01em; line-height: 0.95; }
+  .eyebrow { font: 800 13px/1 "Barlow Condensed", sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green); display: inline-flex; gap: 10px; align-items: center; }
+  .eyebrow::before { content: ""; width: 4px; height: 14px; background: var(--green); border-radius: 2px; }
+
+  header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgba(7,13,20,0.72); border-bottom: 1px solid var(--line); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+  .brand img { width: 34px; height: 34px; border-radius: 8px; }
+  .brand span { font: 900 22px/1 "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+  nav a { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 14px; margin-left: 22px; }
+  nav a:hover { color: var(--text); }
+  @media (max-width: 640px) { nav a:not(.cta-link) { display: none; } }
+
+  .hero { position: relative; overflow: hidden; padding: 72px 0 40px; }
+  .hero::before { content: ""; position: absolute; inset: -20% -10% auto; height: 120%; background: radial-gradient(60% 50% at 70% 30%, rgba(166,240,106,0.18), transparent 70%), radial-gradient(40% 40% at 10% 10%, rgba(80,140,255,0.12), transparent 70%); pointer-events: none; }
+  .hero .wrap { position: relative; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
+  @media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } .hero { padding-top: 40px; } }
+  .hero h1 { font-size: clamp(54px, 9vw, 104px); margin: 16px 0 18px; }
+  .hero h1 em { font-style: normal; color: var(--green); }
+  .hero p.lede { font-size: 19px; color: #c6d3dc; max-width: 34ch; margin: 0 0 28px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .store { display: inline-flex; align-items: center; gap: 10px; background: var(--text); color: #000; text-decoration: none; padding: 12px 20px; border-radius: 14px; font-weight: 700; }
+  .store svg { width: 22px; height: 22px; }
+  .store small { display: block; font-size: 11px; font-weight: 600; opacity: 0.7; line-height: 1; }
+  .store b { display: block; font-size: 18px; line-height: 1.1; }
+  .store[aria-disabled="true"] { cursor: default; }
+  .pill { color: var(--muted); font-size: 14px; border: 1px solid var(--line); padding: 10px 14px; border-radius: 999px; }
+  .phone { justify-self: center; width: min(320px, 78vw); aspect-ratio: 1206/2622; border-radius: 44px; padding: 10px; background: linear-gradient(160deg, #26384a, #0b141d); box-shadow: 0 40px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08), 0 0 80px rgba(166,240,106,0.12); transform: rotate(-3deg); }
+  .phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 36px; display: block; }
+
+  section { padding: 72px 0; }
+  section h2 { font-size: clamp(40px, 6vw, 64px); margin: 14px 0 12px; }
+  section p.sub { color: var(--muted); max-width: 60ch; margin: 0 0 32px; font-size: 17px; }
+
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 860px) { .modes { grid-template-columns: 1fr; } }
+  .mode { background: linear-gradient(180deg, var(--surface-2), var(--surface)); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; }
+  .mode .shot { height: 260px; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .mode .shot img { width: 100%; display: block; }
+  .mode .body { padding: 20px 22px 24px; }
+  .mode h3 { font-size: 34px; margin: 6px 0 8px; }
+  .mode p { color: var(--muted); margin: 0; }
+  .mode .tag { font: 800 12px/1 "Barlow Condensed", sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+
+  .strip { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 0 18px; }
+  .strip figure { margin: 0; flex: 0 0 auto; width: 230px; scroll-snap-align: start; }
+  .strip img { width: 100%; border-radius: 26px; border: 1px solid var(--line); display: block; }
+  .strip figcaption { color: var(--muted); font-size: 13px; margin-top: 8px; text-align: center; }
+
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 860px) { .features { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .features { grid-template-columns: 1fr; } }
+  .feature { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
+  .feature b { display: block; font: 800 22px/1.1 "Barlow Condensed", sans-serif; text-transform: uppercase; margin-bottom: 6px; }
+  .feature span { color: var(--muted); font-size: 15px; }
+
+  .pro { background: linear-gradient(135deg, rgba(166,240,106,0.14), rgba(242,201,76,0.08)); border: 1px solid rgba(166,240,106,0.3); border-radius: 26px; padding: 34px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+  @media (max-width: 760px) { .pro { grid-template-columns: 1fr; padding: 24px; } }
+  .pro h3 { font-size: 44px; margin: 8px 0; }
+  .pro ul { margin: 0; padding-left: 20px; color: #c6d3dc; }
+  .pro li { margin: 6px 0; }
+
+  .faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; margin-bottom: 10px; }
+  .faq summary { cursor: pointer; font-weight: 600; }
+  .faq p { color: var(--muted); margin: 10px 0 0; }
+
+  footer { border-top: 1px solid var(--line); padding: 34px 0 48px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; }
+  footer a { color: var(--muted); margin-right: 18px; }
 </style>
 </head>
 <body>
-<h1>Footballer Life</h1>
-<p>A football career and life simulator: from a school pitch to the world stage, and everything off the pitch.</p>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/icon.png" alt=""><span>Footballer Life</span></a>
+    <nav>
+      <a href="#modes">Modes</a>
+      <a href="#features">Features</a>
+      <a href="#support">Support</a>
+      <a class="cta-link" href="#get">Get it</a>
+    </nav>
+  </div>
+</header>
 
-<h2>Support</h2>
-<p>Email <a href="mailto:playfootballerlife@gmail.com">playfootballerlife@gmail.com</a>. Please include your iPhone model and the app version (Profile › Settings › About).</p>
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Coming to iPhone</span>
+        <h1 class="display">One player.<br><em>A whole life.</em></h1>
+        <p class="lede">Play, manage or own the club. Rise from the school pitch to the world stage, take the big moments yourself and build a life off the pitch.</p>
+        <div class="badges" id="get">
+          <!-- When pre-orders open: set href to the App Store link, remove aria-disabled, and change "Coming soon on the" to "Pre-order on the". -->
+          <a class="store" id="store-link" aria-disabled="true">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.02-1.5-2.62-1.7-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.6 2.25 2.75 2.21 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.71.71 2.88.69 1.19-.02 1.94-1.08 2.66-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.32-.89-2.32-3.54zM14.2 6.15c.61-.74 1.020-1.76.91-2.78-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.69-.93 2.69.98.08 1.98-.5 2.59-1.23z"/></svg>
+            <span><small>Coming soon on the</small><b>App Store</b></span>
+          </a>
+          <span class="pill">Free · no ads · no tracking</span>
+        </div>
+      </div>
+      <div class="phone"><img src="img/match_centre.jpg" alt="Footballer Life live match centre: a 2D pitch, live commentary and touchline controls"></div>
+    </div>
+  </div>
 
-<h2>Common questions</h2>
-<p><strong>Where are my careers saved?</strong> On your iPhone, with automatic backups in your own iCloud Drive when it is on. You can also use <em>Back up</em> (career list, or Settings) to keep a copy in Files or iCloud Drive, and <em>Import a backup</em> on the career list to restore it.</p>
-<p><strong>How do I restore Footballer Life Pro?</strong> Profile › Settings › Restore purchases, signed in with the same Apple Account.</p>
-<p><strong>A week won't continue.</strong> Check Home for a decision waiting (an offer, a match moment or a family choice). If it still fails, email us; your save is never overwritten by a failed week.</p>
+  <section id="modes">
+    <div class="wrap">
+      <span class="eyebrow">Three ways to play</span>
+      <h2 class="display">Your football world</h2>
+      <p class="sub">Start as a ten-year-old with a dream, take a job in the dugout, or buy the club outright. Men's or women's football, across three divisions and 32 nations.</p>
+      <div class="modes">
+        <article class="mode">
+          <div class="shot"><img src="img/player_home.jpg" alt="Player career home screen"></div>
+          <div class="body"><span class="tag">Player</span><h3 class="display">Live the dream</h3><p>School pitch, academy trial, first contract. Take the big moments yourself: shots, penalties, headers and last-gasp chances.</p></div>
+        </article>
+        <article class="mode">
+          <div class="shot"><img src="img/manager_home.jpg" alt="Manager home with board confidence and next match"></div>
+          <div class="body"><span class="tag">Manager</span><h3 class="display">Run the dugout</h3><p>Pick the XI, set tactics, change it live from the touchline, sign wonderkids and keep the board happy.</p></div>
+        </article>
+        <article class="mode">
+          <div class="shot"><img src="img/chairman_office.jpg" alt="Chairman office with club value and fans"></div>
+          <div class="body"><span class="tag">Chairman</span><h3 class="display">Own the club</h3><p>Buy a club, build the stadium, hire and fire the manager, and sell for a profit if the fans let you.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<p><a href="privacy.html">Privacy Policy</a></p>
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="strip">
+        <figure><img src="img/touchline.jpg" alt="Touchline tactics during a live match"><figcaption>Touchline changes, live</figcaption></figure>
+        <figure><img src="img/cup_bracket.jpg" alt="Cup bracket"><figcaption>Cups and European nights</figcaption></figure>
+        <figure><img src="img/scouting.jpg" alt="Wonderkid scouting list"><figcaption>Scout the next wonderkid</figcaption></figure>
+        <figure><img src="img/choose_your_path.jpg" alt="Choose player, manager or chairman"><figcaption>Choose your path</figcaption></figure>
+        <figure><img src="img/match_centre.jpg" alt="Live match centre"><figcaption>Commentary and crowd</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <span class="eyebrow">Everything around the game</span>
+      <h2 class="display">More than ninety minutes</h2>
+      <p class="sub">Every week brings a decision. Every season tells a story.</p>
+      <div class="features">
+        <div class="feature"><b>Live matches</b><span>A running clock, crowd, whistles and spoken commentary, with your moments to play.</span></div>
+        <div class="feature"><b>Transfer drama</b><span>Breaking news, agents, bids and a "here we go" unveiling at your new club.</span></div>
+        <div class="feature"><b>Real money</b><span>Wages, sponsors from boots to watches, tax, houses, cars and mortgages.</span></div>
+        <div class="feature"><b>A life off the pitch</b><span>Partners, kids who may follow you, parents, holidays, businesses and a foundation.</span></div>
+        <div class="feature"><b>A living world</b><span>Players age, rise and retire; clubs rise and fall; rivals chase your place.</span></div>
+        <div class="feature"><b>Club chaos</b><span>Broken-down buses, flooded pitches, nights out in the papers: your call.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="pro">
+        <div>
+          <span class="eyebrow">Free to play</span>
+          <h3 class="display">Every part of the game is free</h3>
+          <p style="color:var(--muted);margin:0">Three careers, one for each mode, with no ads and no tracking. Footballer Life Pro is a one-time unlock for players who want more.</p>
+        </div>
+        <ul>
+          <li>Unlimited careers</li>
+          <li>6-month and 1-year simulations</li>
+          <li>Hall of Fame of your legends</li>
+          <li>Kit styles and portrait frames</li>
+          <li>Game editor: clubs, kits, players and name packs</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="support" class="faq">
+    <div class="wrap">
+      <span class="eyebrow">Support</span>
+      <h2 class="display">Help &amp; questions</h2>
+      <p class="sub">Email <a href="mailto:playfootballerlife@gmail.com">playfootballerlife@gmail.com</a>. Please include your iPhone model and the app version (Profile › Settings › About).</p>
+      <details><summary>Where are my careers saved?</summary><p>On your iPhone, with automatic backups in your own iCloud Drive when it is on. You can also use Back up (career list, or Settings) to keep a copy in Files, and Import a backup on the career list to restore it.</p></details>
+      <details><summary>How do I restore Footballer Life Pro?</summary><p>Profile › Settings › Restore purchases, signed in with the same Apple Account.</p></details>
+      <details><summary>A week won't continue.</summary><p>Check Home for a decision waiting (an offer, a match moment or a family choice). If it still fails, email us; your save is never overwritten by a failed week.</p></details>
+      <details><summary>Are the clubs and players real?</summary><p>No. All clubs, players and brands are fictional, with realistic names for every country. You can rename anything in the game editor.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><a href="privacy.html">Privacy Policy</a><a href="support.html">Support</a><a href="mailto:playfootballerlife@gmail.com">Contact</a></div>
+    <div>© 2026 Footballer Life</div>
+  </div>
+</footer>
 </body>
 </html>
